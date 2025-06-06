@@ -35,7 +35,11 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())  // Desabilita CSRF (caso você não precise)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll()  // Permite sem autenticação
+                .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()  // Exige autenticação para qualquer outra requisição
+            )
+            .headers(headers -> 
+            headers.frameOptions(frameOptions -> frameOptions.sameOrigin())
             )
             .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);  // Adiciona o filtro JWT antes do filtro de autenticação padrão
 
