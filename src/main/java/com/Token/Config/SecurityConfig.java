@@ -32,16 +32,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())  // Desabilita CSRF (caso você não precise)
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll()  // Permite sem autenticação
-                .requestMatchers("/h2-console/**").permitAll()
-                .anyRequest().authenticated()  // Exige autenticação para qualquer outra requisição
+                // Libera o acesso aos endpoints de autenticação e aos arquivos estáticos
+                .requestMatchers("/auth/**", "/", "/index.html", "/register.html", "/tasks.html", "/script.js", "/style.css").permitAll()
+                .requestMatchers("/h2-console/**").permitAll() // Libera o console do H2
+                .anyRequest().authenticated()  // Exige autenticação para todo o resto
             )
             .headers(headers -> 
-            headers.frameOptions(frameOptions -> frameOptions.sameOrigin())
+                headers.frameOptions(frameOptions -> frameOptions.sameOrigin())
             )
-            .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);  // Adiciona o filtro JWT antes do filtro de autenticação padrão
+            .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
