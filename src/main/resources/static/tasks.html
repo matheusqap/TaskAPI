@@ -5,12 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Minhas Tarefas - TaskAPI</title>
     <link rel="stylesheet" href="/style.css" />
+    <style>
+      .user-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        gap: 15px;
+      }
+
+      .user-info img.profile-picture {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
       <div class="header">
         <h1>Minhas Tarefas</h1>
         <button id="logout-button">Sair</button>
+      </div>
+
+      <!-- 🔽 Novo bloco de perfil -->
+      <div id="user-info" class="user-info">
+        <!-- Aqui será preenchido dinamicamente com o nome e a imagem do usuário -->
       </div>
 
       <form id="task-form">

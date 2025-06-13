@@ -6,10 +6,16 @@ import com.Token.utils.JwtUtil;
 import com.Token.DTOs.LoginDTO;
 import com.Token.DTOs.RegisterDTO;
 import com.Token.DTOs.TokenResponseDTO;
+import com.Token.DTOs.UserProfileDTO;
+
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/auth")
@@ -22,14 +28,21 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterDTO data) {
+    public ResponseEntity<?> registerUser(
+        @RequestParam("username") String username,
+        @RequestParam("password") String password,
+        @RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture
+    ) {
         try {
-            User user = userService.registerUser(data.username, data.password);
-            return ResponseEntity.ok("User registered with ID: " + user.getId() + " Response Status: " + HttpStatus.OK.value());
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            User user = userService.registerUser(username, password, profilePicture);
+            return ResponseEntity.ok("Usuário registrado com sucesso");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body("Erro ao processar imagem");
         }
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO data) {
@@ -41,6 +54,16 @@ public class AuthController {
             return ResponseEntity.ok(token);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<UserProfileDTO> getUserProfile() {
+        try {
+            UserProfileDTO profile = userService.getLoggedUserProfile();
+            return ResponseEntity.ok(profile);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
 

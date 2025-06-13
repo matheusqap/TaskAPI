@@ -37,12 +37,20 @@ function setupRegisterPage() {
     e.preventDefault(); // Impede o envio padrão do formulário
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
+    const profilePicture = document.getElementById("profilePicture").files[0];
+
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("password", password);
+    if (profilePicture) {
+      formData.append("profilePicture", profilePicture);
+    }
 
     try {
       const response = await fetch("/auth/register", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        //headers: { "Content-Type": "application/json" },
+        body: formData, //JSON.stringify({ username, password }),
       });
 
       if (response.ok) {
@@ -111,6 +119,7 @@ function setupTasksPage() {
 
   taskForm.addEventListener("submit", createTask);
 
+  loadUserProfile();
   loadTasks(); // Carrega as tarefas assim que a página é configurada
 }
 
@@ -188,3 +197,41 @@ async function createTask(e) {
     showMessage(error.message, "error");
   }
 }
+
+/**
+ * Busca e exibe o nome e a foto do usuário logado.
+ */
+async function loadUserProfile() {
+  const token = localStorage.getItem("token");
+  if (!token) return;
+
+  try {
+    const response = await fetch("/auth/user", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) throw new Error("Erro ao carregar informações do usuário.");
+
+    const user = await response.json();
+    console.log(user); // para ver o que está vindo
+
+    const userInfoDiv = document.getElementById("user-info");
+    if (userInfoDiv) {
+      userInfoDiv.innerHTML = `
+        <p><strong>Usuário:</strong> ${user.username}</p>
+        ${
+          user.imageBase64
+            ? `<img src="data:image/jpeg;base64,${user.imageBase64}" alt="Foto de perfil" class="profile-picture" />`
+            : "<p>Sem foto de perfil.</p>"
+        }
+      `;
+    }
+  } catch (error) {
+    showMessage(error.message, "error");
+  }
+}
+
+
