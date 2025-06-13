@@ -13,7 +13,6 @@ COPY src ./src
 # O -DskipTests pula os testes aqui, pois teremos uma etapa dedicada para isso no pipeline
 RUN mvn clean install -DskipTests
 
-
 # Criação da imagem
 FROM eclipse-temurin:17-jre-focal
 
