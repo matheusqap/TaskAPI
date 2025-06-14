@@ -1,0 +1,40 @@
+stages:
+  - build
+  - test
+  - package
+
+build-job:
+  stage: build
+  image: maven:3.9-eclipse-temurin-17
+  script:
+    - echo "Compilando e empacotando a aplicação (sem rodar testes)..."
+    # O comando 'package' cria o .jar e '-DskipTests' pula a execução dos testes
+    - mvn package -B -DskipTests
+  
+  # Salva o .jar gerado para ser usado em outros jobs
+  artifacts:
+    paths:
+      - target/*.jar
+    expire_in: 1 hour
+
+test-job:
+  stage: test
+  image: maven:3.9-eclipse-temurin-17
+  needs:
+    - build-job
+  script:
+    - echo "Executando os testes automatizados..."
+    # O comando 'test' irá baixar as dependências e rodar os testes
+    - mvn test -B
+
+  package-job:
+  image: docker:latest
+  stage: package
+  services:
+    - docker:dind
+  needs:
+    - build-job
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_NAME//\//-} .
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_NAME//\//-}
