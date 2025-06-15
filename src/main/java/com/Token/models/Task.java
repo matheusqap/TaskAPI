@@ -41,4 +41,13 @@ public class Task {
         this.user = user;
         this.createdAt = LocalDateTime.now();
     }
+
+    public Task(Long id, String title, String description, String status, User user) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.user = user;
+        this.createdAt = LocalDateTime.now();
+    }
 }
