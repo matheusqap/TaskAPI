@@ -10,7 +10,7 @@ build-job:
     - echo "Compilando e empacotando a aplicação (sem rodar testes)..."
     # O comando 'package' cria o .jar e '-DskipTests' pula a execução dos testes
     - mvn package -B -DskipTests
-  
+
   # Salva o .jar gerado para ser usado em outros jobs
   artifacts:
     paths:
@@ -27,7 +27,7 @@ test-job:
     # O comando 'test' irá baixar as dependências e rodar os testes
     - mvn test -B
 
-  package-job:
+package-job:
   image: docker:latest
   stage: package
   services:
