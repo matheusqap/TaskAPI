@@ -1,3 +1,8 @@
+# Autores
+
+- **Lucas Pinheiro Caldas**
+- **Matheus Queiroz de Almeida Pereira**
+
 # TaskAPI - API de Gerenciamento de Tarefas
 
 ![Java](https://img.shields.io/badge/Java-17-blue)
@@ -144,23 +149,3 @@ _Obs: Todos os endpoints de tarefas são protegidos e exigem um cabeçalho de au
 | `GET`  | `/tasks/list` | Retorna a lista de tarefas do usuário logado. | N/A                                                         |
 | `POST` | `/tasks/post` | Cria uma nova tarefa para o usuário logado.   | `{ "title": "Nova Tarefa", "description": "Descrição..." }`
 
-## Estrutura do Projeto
-TaskAPI/
-├── src
-│ ├── main
-│ │ ├── java/com/Token
-│ │ │ ├── config/ # Configurações do Spring Security e JWT Filter
-│ │ │ ├── controllers/ # Controladores da API (Endpoints)
-│ │ │ ├── DTOs/ # Data Transfer Objects
-│ │ │ ├── models/ # Entidades JPA (User, Task)
-│ │ │ ├── repositories/ # Repositórios Spring Data
-│ │ │ ├── services/ # Lógica de negócio
-│ │ │ └── utils/ # Utilitários (JwtUtil)
-│ │ └── resources
-│ │ ├── static/ # Arquivos do Front-end (HTML, CSS, JS)
-│ │ └── application.properties # Configurações da aplicação
-│ └── test/...
-├── .gitignore
-├── .gitlab-ci.yml # Definição do pipeline de CI/CD
-├── Dockerfile # Definição da imagem Docker
-└── pom.xml # Dependências e build do Maven
