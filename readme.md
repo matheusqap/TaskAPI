@@ -1,7 +1,7 @@
 # Autores
 
-- **Lucas Pinheiro Caldas**
-- **Matheus Queiroz de Almeida Pereira**
+- **Lucas Pinheiro Caldas** (20220040190)
+- **Matheus Queiroz de Almeida Pereira** (20220055380)
 
 # TaskAPI - API de Gerenciamento de Tarefas
 
