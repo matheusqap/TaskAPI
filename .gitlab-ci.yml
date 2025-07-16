@@ -49,5 +49,3 @@ deploy-to-gke:
     - gcloud container clusters get-credentials taskapi-cluster --zone us-central1-a --project $GCP_PROJECT_ID
     - kubectl apply -f k8s/
     - echo "Deploy concluído com sucesso!"
-  only:
-    - master # Executa o deploy apenas em pushes para a branch main
