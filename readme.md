@@ -11,25 +11,11 @@
 ![Security](https://img.shields.io/badge/Security-JWT-blueviolet)
 ![CI/CD](https://img.shields.io/badge/CI/CD-GitLab-orange)
 
-Uma aplicação web simples para gerenciamento de tarefas com autenticação de usuário baseada em Token JWT, construída com Spring Boot para o back-end e HTML/CSS/JS para o front-end.
-
-Este projeto está configurado com um pipeline de Integração Contínua e Entrega Contínua (CI/CD) usando GitLab CI.
-
-## Tabela de Conteúdos
-
-1.  [Sobre o Projeto](#sobre-o-projeto)
-2.  [Funcionalidades](#funcionalidades)
-3.  [Tecnologias Utilizadas](#tecnologias-utilizadas)
-4.  [Como Executar Localmente](#como-executar-localmente)
-5.  [Pipeline de CI/CD](#pipeline-de-cicd)
-6.  [Endpoints da API](#endpoints-da-api)
-7.  [Estrutura do Projeto](#estrutura-do-projeto)
 
 ## Sobre o Projeto
+Uma aplicação web simples para gerenciamento de tarefas que permite que usuários se cadastrem, façam login e gerenciem uma lista de tarefas pessoais.
 
-O **TaskAPI** foi desenvolvido para demonstrar a implementação de um sistema de autenticação seguro em uma API REST usando Spring Security e JSON Web Tokens (JWT). A aplicação permite que usuários se cadastrem, façam login e gerenciem uma lista de tarefas pessoais.
-
-O front-end é servido diretamente pelo back-end Spring Boot, criando uma aplicação web autocontida.
+O **TaskAPI** foi desenvolvido para demonstrar a implementação de um sistema de autenticação seguro em uma API REST usando Spring Security e JSON Web Tokens (JWT), além disso a aplicação é totalmente containerizada com Docker e possui um pipeline de CI/CD configurado no GitLab. 
 
 ## Funcionalidades
 
@@ -40,68 +26,31 @@ O front-end é servido diretamente pelo back-end Spring Boot, criando uma aplica
 - 🐳 **Containerização com Docker**: `Dockerfile` otimizado com múltiplos estágios.
 - 🚀 **CI/CD com GitLab**: Pipeline automatizado para build, testes e publicação de imagem Docker.
 
-## Tecnologias Utilizadas
-
-#### **Back-end**
-
-- **Java 17**
-- **Spring Boot 3.2.5**
-- **Spring Security**: Para a camada de autenticação e autorização.
-- **Spring Data JPA**: Para a persistência de dados.
-- **JWT (JSON Web Token)**: Biblioteca `io.jsonwebtoken` para geração e validação de tokens.
-- **H2 Database**: Banco de dados relacional em memória.
-- **Maven**: Gerenciador de dependências e build.
-
-#### **Front-end**
-
-- HTML5
-- CSS3
-- JavaScript (Vanilla JS)
-
-#### **DevOps**
-
-- **Docker**: Para containerização.
-- **GitLab CI/CD**: Para automação do pipeline.
-
-## Como Executar Localmente
-
-Siga os passos abaixo para executar a aplicação na sua máquina.
-
-#### **Pré-requisitos**
-
-- **JDK 17** ou superior instalado.
-- **Apache Maven** instalado e configurado no PATH do sistema.
-
+## Como Executar a Aplicação (GitLab Container Registry)
+A aplicação está containerizada e pode ser executada facilmente usando Docker. Siga os passos abaixo para configurar e iniciar a aplicação localmente. A imagem está hospedada no registro do GitLab, facilitando o acesso e a execução.
 #### **Passos para Instalação**
 
-1.  **Clone o repositório** para a sua máquina.
+1. **Certifique-se de que o Docker está instalado** e em execução na sua máquina.
+Baixando a imagem do gitlab registry
 
-2.  **Abra um terminal** na pasta raiz do projeto (`TaskAPI/`).
-
-3.  **Execute o comando Maven** para iniciar a aplicação:
+2.  **Abra um terminal** e execute o seguinte comando para baixar a imagem Docker:
+    ```bash
+    docker pull registry.gitlab.com/lucpc/taskapi:II-Unidade
+    ```
+3.  **Execute a imagem** com o seguinte comando:
 
     ```bash
-    mvn spring-boot:run
+    docker run -p 8080:8080 registry.gitlab.com/lucpc/taskapi:II-Unidade
     ```
-
 4.  **Acesse a aplicação** no seu navegador:
     [http://localhost:8080](http://localhost:8080)
 
-5.  **(Opcional) Acesse o Console do H2 Database** para visualizar o banco de dados em tempo real:
-    - URL: [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
-    - **JDBC URL**: `jdbc:h2:mem:testdb`
-    - **User Name**: `sa`
-    - **Password**: (deixe em branco)
-
----
-
 ## Pipeline de CI/CD
-
 Este projeto utiliza GitLab CI/CD para automatizar o processo de integração e entrega. O pipeline está definido no arquivo `.gitlab-ci.yml` e é dividido em três estágios sequenciais:
 
 1.  **`build`**:
 
-    - **O que faz?** Este estágio utiliza o `build-job` para compilar o código-fonte e empacotar a aplicação em um arquivo `.jar`, pulando a execução dos testes (`-DskipTests`). O `.jar` resultante é salvo como um artefato para ser usado nos estágios seguintes.
+    - **O que faz?** Este estágio utiliza o `build-job` para compilar o código-fonte e empacotar a aplicação em um arquivo `.jar`, pulando a execução dos testes (`-DskipTests`) que só serão executados na fase de testes da pipeline. O `.jar` resultante é salvo como um artefato para ser usado nos estágios seguintes.
     - **Gatilho**: Executado a cada `push` para qualquer branch no repositório.
 
 2.  **`test`**:
