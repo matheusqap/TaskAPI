@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskapi-deployment
+spec:
+  replicas: 2 # Executa duas instâncias da sua aplicação para alta disponibilidade
+  selector:
+    matchLabels:
+      app: taskapi
+  template:
+    metadata:
+      labels:
+        app: taskapi
+    spec:
+      containers:
+      - name: taskapi-container
+        # IMPORTANTE: A imagem do seu GitLab Container Registry
+        image: registry.gitlab.com/lucpc/taskapi:II-Unidade
+        ports:
+        - containerPort: 8080 # A porta que sua aplicação expõe dentro do container
+        
+        # --- PROBES DE SAÚDE (CUMPRINDO REQUISITO 7) ---
+        readinessProbe: # Verifica se o container está pronto para receber tráfego
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 20 # Espera 20s antes da primeira verificação
+          periodSeconds: 10     # Verifica a cada 10s
+        
+        livenessProbe: # Verifica se a aplicação ainda está "viva"
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 30 # Espera 30s antes da primeira verificação
+          periodSeconds: 15     # Verifica a cada 15s

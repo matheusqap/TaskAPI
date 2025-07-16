@@ -38,3 +38,14 @@ package-job:
     - docker build -t $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_NAME//\//-} .
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker push $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_NAME//\//-}
+
+deploy-to-gke:
+  stage: deploy
+  image: google/cloud-sdk:latest # Imagem com gcloud e kubectl
+  script:
+    - echo $GCP_SERVICE_ACCOUNT_KEY > gcloud-service-key.json # Carrega a chave a partir da variável do GitLab
+    - gcloud auth activate-service-account --key-file=gcloud-service-key.json
+    - gcloud container clusters get-credentials taskapi-cluster --zone us-central1-a --project $GCP_PROJECT_ID
+    - kubectl apply -f k8s/
+  only:
+    - main # Executa o deploy apenas em pushes para a branch main
