@@ -2,6 +2,7 @@ stages:
   - build
   - test
   - package
+  - deploy
 
 build-job:
   stage: build
@@ -47,5 +48,6 @@ deploy-to-gke:
     - gcloud auth activate-service-account --key-file=gcloud-service-key.json
     - gcloud container clusters get-credentials taskapi-cluster --zone us-central1-a --project $GCP_PROJECT_ID
     - kubectl apply -f k8s/
+    - echo "Deploy concluído com sucesso!"
   only:
-    - main # Executa o deploy apenas em pushes para a branch main
+    - master # Executa o deploy apenas em pushes para a branch main
