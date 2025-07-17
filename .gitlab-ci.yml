@@ -45,7 +45,11 @@ deploy-to-gke:
   image: google/cloud-sdk:latest
   script:
     - echo "Escrevendo a chave de serviço no arquivo..."
-    - echo "$GCP_SERVICE_ACCOUNT_KEY" > gcloud-service-key.json
+    - echo "$GCP_SERVICE_ACCOUNT_KEY" | base64 -d > gcloud-service-key.json
+
+    - echo "Verificando o conteúdo do arquivo..."
+    - head -c 100 gcloud-service-key.json
+
     - echo "Autenticando com a conta de serviço da GCP..."
     - gcloud auth activate-service-account --key-file=gcloud-service-key.json
 
